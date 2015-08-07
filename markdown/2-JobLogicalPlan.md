@@ -229,7 +229,7 @@ combineByKey() 的定义如下：
       mapSideCombine: Boolean = true,
       serializer: Serializer = null): RDD[(K, C)]
 ```
-其中主要有三个参数 createCombiner，mergeValue 和 mergeCombiners。简单解释下这三个函数及 combineByKey() 的意义，注意它们的类型：
+其中主要有三个参数 createCombiner，mergeValue 和 mergeCombiners。简单解释下这三个参数及 combineByKey() 的意义，注意它们的类型：
 
 假设一组具有相同 K 的 \<K, V\> records 正在一个个流向 combineByKey()，createCombiner 将第一个 record 的 value 初始化为 c （比如，c = value），然后从第二个 record 开始，来一个 record 就使用 mergeValue(c, record.value) 来更新 c，比如想要对这些 records 的所有 values 做 sum，那么使用 c = c + record.value。等到 records 全部被 mergeValue()，得到结果 c。假设还有一组 records（key 与前面那组的 key 均相同）一个个到来，combineByKey() 使用前面的方法不断计算得到 c'。现在如果要求这两组 records 总的 combineByKey() 后的结果，那么可以使用 final c = mergeCombiners(c, c') 来计算。
 
